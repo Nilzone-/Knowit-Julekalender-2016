@@ -1,3 +1,12 @@
+//========================================================================================================================================
+//
+// Finn det minste naturlige tallet som ender på 6 og som har følgende egenskap:
+// - hvis man fjerner det siste tallet og plasserer det først så blir tallet fire ganger så stort som det opprinnelige tallet.
+//
+//========================================================================================================================================
+
+
+
 (function () {
     var n = -1;
     for (n = 6;; n += 10) {
