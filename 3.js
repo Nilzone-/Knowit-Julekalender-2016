@@ -33,53 +33,26 @@ http.get(url, function (response) {
     });
 
     response.on('end', function () {
-        solve(data);
+        data.split(' ').map((val, i, arr) => {
+            if(val === 'hates') addToObj(enemies, arr[i-1], arr[i+1]);
+            if(val === 'friends') {
+                addToObj(friends, arr[i+1], arr[i+2]);
+                addToObj(friends, arr[i+2], arr[i+1])
+            }
+        });
+        findCameleon(Object.keys(enemies));
     });
 });
 
 
-function solve(data) {
-    var arr = data.replace(/\s+/g, ' ').split(/\s+/);
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === 'hates') addToEnemies(arr, i);
-        if (arr[i] === 'friends') addToFriends(arr, i);
-    }
-
-    findCameleon(Object.keys(friends));
-}
-
-function addToFriends(arr, i) {
-    var personWhoLikes = arr[i + 1];
-    var personWhoAlsoLikes = arr[i + 2];
-
-    addPropertiesAndValues(friends, personWhoLikes, personWhoAlsoLikes)
-    addPropertiesAndValues(friends, personWhoAlsoLikes, personWhoLikes)
-}
-
-function addToEnemies(arr, i) {
-    var personWhoHates = arr[i - 1];
-    var personToBeHated = arr[i + 1];
-
-    addPropertiesAndValues(enemies, personWhoHates, personToBeHated);
-}
-
-function addPropertiesAndValues(obj, prop, value) {
-    if (!obj.hasOwnProperty(prop)) {
-        obj[prop] = [];
-        obj[prop].push(value);
-    } else {
-        obj[prop].push(value);
-    }
+function addToObj(obj, prop, value) {
+    if (!obj.hasOwnProperty(prop)) { obj[prop] = []; obj[prop].push(value); }
+    else obj[prop].push(value);
 }
 
 Array.prototype.isFound = function (val) {
     var found = false;
-    for (var i = 0; i < this.length; i++) {
-        if (this[i] == val) {
-            found = true;
-            break;
-        }
-    }
+    for (var i = 0; i < this.length; i++) if(this[i] == val) { found = true; break; }
     return found;
 }
 
@@ -96,7 +69,5 @@ function findCameleon(names) {
     for (var cameleon in cameleons)
         sortable.push([cameleon, cameleons[cameleon]])
 
-    console.log(sortable.sort(function (a, b) {
-        return b[1] - a[1]
-    }));
+    console.log(sortable.sort((a, b) => b[1] - a[1]));
 }
