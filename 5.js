@@ -32,11 +32,8 @@ let solve = (data) => {
             roman.split('').forEach(n => sum = (sum >= values[n]) ? sum + values[n] : values[n] - sum);
             return isNaN(sum) ? 0 : sum;
         })
-        .map((n, i, arr, h = arr.length / 2) => {
-            let result = '';
-            result += (i < h) ? String.fromCharCode(96 + (n + arr[arr.length - 1 - i])) : '';
-            return result;
-        }).join('');
+        .map((n, i, arr, h = arr.length / 2) => (i < h) ? String.fromCharCode(96 + (n + arr[arr.length - 1 - i])) : '')
+        .join('');
 
     console.log(n);
 
