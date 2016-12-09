@@ -18,49 +18,48 @@ Svaret du skal frem til kan finnes når en spiller lander i siste feltet på bre
 Eksempelvis om spiller 3 vinner og det totale antallet stiger som ble brukt var 13 blir svaret: 39
 
 
- */ 
+ */
 
 
 const http = require('http');
 const url = 'http://pastebin.com/raw/dJ7cT4AF';
 
 const map = {
-	3: 17,
-	8: 10,
-	15: 44,
-	22: 5,
-	39: 56,
-	49: 75,
-	62: 45,
-	64: 19,
-	65: 73,
-	80: 12,
-	87: 79
+    3: 17,
+    8: 10,
+    15: 44,
+    22: 5,
+    39: 56,
+    49: 75,
+    62: 45,
+    64: 19,
+    65: 73,
+    80: 12,
+    87: 79
 };
 
-http.get(url, function(res) {
-	let data = '';
-	res.on('data', buffer => data += buffer.toString());
-	res.on('end', () => {
-		solve(data.split('\r\n').map(str => parseInt(str)));
-	});
+http.get(url, function (res) {
+    let data = '';
+    res.on('data', buffer => data += buffer.toString());
+    res.on('end', () => {
+        solve(data.split('\r\n').map(str => parseInt(str)));
+    });
 });
 
+
 function solve(data) {
-	let players = {},
-		ladders = 0,
-		moves = 0;
-	for (let i = 1; i <= data.length; i++) {
-		let p = (i % 1337), dice = data[i-1];
-		
-		players[p] = (players[p] || 1) + dice;
-		if(map[players[p]]) { players[p] = map[players[p]]; ladders++}
-		
-		if(players[p] === 90) {
-			console.log('Player: ' + p + ' with a score of ' + (p * ladders));
-			break;
-		}
-	}	
+    let players = {}, ladders = 0;
+    for (let i = 1; i <= data.length; i++) {
+        let p = (i % 1337), dice = data[i - 1];
+
+        players[p] = (players[p] || 1);
+
+        if (players[p] + dice <= 90) players[p] += dice;
+        if (map[players[p]]) { players[p] = map[players[p]]; ladders++; }
+
+        if (players[p] === 90) {
+            console.log('Player: ' + p + ' with a score of ' + (p * ladders));
+            break;
+        }
+    }
 }
-
-
